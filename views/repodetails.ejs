@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<link rel="stylesheet" href="/main.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class='form'>
+		<form id="repo-form" name = "form" method="POST" action="/" onsubmit="disableButton()">
+			<div class="input-elem">
+				<label>Enter Organisation name </label>
+				<input type="text" name="orgname" id='input'>
+			</div>
+			<div class="input-elem">
+				<label>Enter N (most populare repositories) </label>
+				<input type="number" min="1" id='ntoprepos' name="n">
+			</div>
+			<div class="input-elem">
+				<label>Enter M (top committies) </label>
+				<input type="number" min="1" max="100" id='mtopcommitties' name="m">
+			</div>
+			<br>
+			<br>
+			<button id='api_get_button' onclick="return IsEmpty();">Get Repos</button>
+		</form>
+	</div>
+	<script>
+		function disableButton() {
+			var btn = document.getElementById('api_get_button');
+			btn.disabled = true;
+			btn.innerText = 'Getting Top Repos...'
+		}
+		function IsEmpty() {
+			var m = document.forms['form'].m.value
+			var n = document.forms['form'].n.value
+			var org = document.forms['form'].orgname.value
+			if (n==="" || m==="" || org==="") {
+				alert("Fields cannot be empty");
+				return false;
+			}
+			return true;
+		}
+	</script>
+</body>
+
+</html>

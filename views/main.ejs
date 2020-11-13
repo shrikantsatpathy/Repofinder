@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+
+<body>
+    <div class="btn-div"><a
+            href="https://github.com/login/oauth/authorize?scope=user:email&client_id=51cabb96126a002a92f9"
+            class="auth-button">Authenticate</a></div>
+    <% for(var i of repoDetailsList) { %>
+        <% if(i.repoName.length!=0) { %>
+            <div class="repo-container">
+                <div class="repo-name">
+                    <h4>Repo Name: <%= i.repoName %></h4>
+                    <h4>Fork Count: <%= i.forkCount %></h4>
+                </div>
+                <div class="author-container">
+                    <% for(var j of i.authors) { %>
+                    <div class="author-name">
+                        Author : <%= j.name %> , Contributions: <%= j.contributions %>
+                    </div>
+                    <% }%>
+                </div>
+            </div>
+            <br>
+            </div>
+        <% } %>
+    <% } %>
+
+
+
+</body>
+
+</html>
