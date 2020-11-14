@@ -1,6 +1,8 @@
 # Repofinder
 
-Repofinder is a webapplication which can find top n repositories(based on the fork count) and their top m contributors(based on their commits count) of your favourite organization on github
+Repofinder is a webapplication which can find top n repositories(based on the fork count) and their top m contributors(based on their commits count) of your favourite organization on github  
+
+Click to chekout the website -> [![Repofinder](https://img.shields.io/badge/website-live-brightgreen.svg?style=flat-square)](http://54.172.43.19:8080/)
 
 ### How to set it up locally on your machine
 You should have nodejs and npm installed in your machine. [click here](http://daringfireball.net/projects/markdown/) if you haven't already.
