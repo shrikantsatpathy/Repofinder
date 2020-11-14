@@ -9,6 +9,7 @@
 </head>
 
 <body>
+	<!-- Form to provide inputs for the repository details -->
 	<div class='form'>
 		<form id="repo-form" name = "form" method="POST" action="/" onsubmit="disableButton()">
 			<div class="input-elem">
@@ -17,7 +18,7 @@
 			</div>
 			<div class="input-elem">
 				<label>Enter N (most populare repositories) </label>
-				<input type="number" min="1" id='ntoprepos' name="n">
+				<input type="number" min="1" max = "200" id='ntoprepos' name="n">
 			</div>
 			<div class="input-elem">
 				<label>Enter M (top committies) </label>
@@ -28,6 +29,7 @@
 			<button id='api_get_button' onclick="return IsEmpty();">Get Repos</button>
 		</form>
 	</div>
+
 	<script>
 		function disableButton() {
 			var btn = document.getElementById('api_get_button');

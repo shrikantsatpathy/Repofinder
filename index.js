@@ -4,6 +4,7 @@ var app = express()
 var axios = require('axios');
 var bodyParser = require('body-parser')
 var port = process.env.PORT || 8080
+
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var access_token = ""
 var repoDetailsViewPath = "/views/repodetails"
@@ -15,7 +16,8 @@ app.set('views', __dirname + '/views');
 app.use("/static", express.static('./static/'));
 app.use(express.static(__dirname + '/public'));
 
-// This is the callback method for github to generate the authentication token
+// This is the callback method for github to generate the authentication token.
+// The github API rate limits is 60/hour, Authentication increases this limit to 5K/hour
 app.get('/github/callback', (req, res) => {
     console.log("hit /github/callback")
     const requestToken = req.query.code
@@ -37,23 +39,25 @@ app.get('/github/callback', (req, res) => {
 /**
  * This will be executed when the user hits the root url.
  */
-app.get('/repoDetailsform', (req, res) => {
-    repoDetailsList = []
-    res.render(__dirname + repoDetailsViewPath, { repoDetailsList: repoDetailsList })
-})
 app.get('/', (req, res) => {
     console.log('Loading home page')
     repoDetailsList = []
     res.render(__dirname + "/views/main.ejs", { repoDetailsList: repoDetailsList })
 })
 
+/**
+ * This will be executed when the user hits the authenticate button to show the repo finder form.
+ */
+app.get('/repoDetailsform', (req, res) => {
+    repoDetailsList = []
+    res.render(__dirname + repoDetailsViewPath, { repoDetailsList: repoDetailsList })
+})
 
 /**
  * This will be executed when the user submitted the input to get the top N authors of the top M repositories.
  */
 app.post('/', urlencodedParser, function (req, res) {
     try {
-        console.log("post")
         renderRepoDetails(req, res);
     } catch (error) {
         console.log(error)
@@ -71,8 +75,10 @@ async function renderRepoDetails(req, res) {
     var noOfAuthors = req.body.m;
     var repoDetailsList = new Array();
 
+    //Get top repositories
     var topRepoList = await getTopRepos(organization, noOfRepos);
 
+    //Get top authors of top repositories
     for (let i = 0; i < topRepoList.length; i++) {
         topAuthors = await getTopAuthors(topRepoList[i], noOfAuthors).catch(error => {
             console.log(error);
@@ -130,7 +136,6 @@ async function getTopReposFromMultiplePages(noOfPages, orgName, n) {
     console.log("Getting top repos for organization " + orgName + " with multiple page")
 
     for (let i = 1; i < 2 + 1; i++) {
-        // if (topNReposAcrossPages.length < n) {
         repoPageUrl = `https://api.github.com/search/repositories?q=org:${orgName}&sort=forks&order=desc&per_page=100&page=` + i
         await axios.get(repoPageUrl, {
             headers: {
@@ -139,15 +144,11 @@ async function getTopReposFromMultiplePages(noOfPages, orgName, n) {
         }).then(resp => {
             //Sorting top n respository of particular page based on fork_count (total fork) and slicing top n           
             resp.data.items.forEach(element => {
-                // if (topNReposAcrossPages.length < n) {
                 topNReposAcrossPages.push(element)
-                //  }
             }
             )
         });
-        // } else {
-        //     break;
-        // }
+
     }
 
     console.log("Fetched top repos for organization " + orgName + " with multiple page")
